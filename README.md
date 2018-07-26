@@ -6,7 +6,7 @@
 
     * Python3
     * Mongo (NoSQL)
-    * Django-REST
+    * Flask <3
 
 # How to use locally
 Activate virtualenv
@@ -20,3 +20,9 @@ Create requirements.txt
 Convert requirements.txt to Pipfile
     
     pipenv install 
+
+
+Super user
+
+    admin
+    admin123
