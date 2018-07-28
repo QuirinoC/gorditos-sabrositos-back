@@ -4,9 +4,9 @@
 
 ### Technologies used
 
-    * Python3
-    * Mongo (NoSQL)
-    * Flask <3
+    🐍 Python3 ❤️
+    * Mongo (NoSQL) 
+    * Flask 
 
 # How to use locally
 Activate virtualenv
@@ -20,6 +20,11 @@ Create requirements.txt
 Convert requirements.txt to Pipfile
     
     pipenv install 
+
+Get env variables
+
+    source env_variables
+    Note: This is not commited
 
 
 Super user
