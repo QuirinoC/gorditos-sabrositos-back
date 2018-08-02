@@ -20,13 +20,15 @@ connect(db='gorditos',
 #Flask stuff
 app = Flask(__name__)
 
-@app.route('/login', methods=['POST',"GET"])
-def login():
-    res = make_response("/login")
-    res.set_cookie('token', "{token}")
-    return res
+@app.route('/users', methods=['GET','POST'])
+def users():
+    
+    user = User(**request.json)
 
-@app.route('/sign_up', methods=['POST'])
-def sign_up():
-    return make_response("OK")
+    try:
+        user.save()
+    except Exception as e:
+        return f"ERROR: MISSING USER PROPERTY\n{e}"
 
+    
+    return 'OK'
