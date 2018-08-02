@@ -1,4 +1,2 @@
-import os
-db_uri = os.environ['DB_URI']
-
-print(db_uri)
+def valid_session(session_id):
+    pass
