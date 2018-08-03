@@ -60,3 +60,30 @@ def login():
     else:
         return make_response('Invalid session')
     return make_response("UNKNOWN ERROR")
+
+@app.route('/register', methods=['POST'])
+def register():
+    data     = request.json
+    exists   = False
+    #Forgive me god for this piece of code
+    #Check if the user is already registered
+    try:
+        user   = User.objects.get(mail=data['mail'])
+        exists = True
+        if (user.complete):
+            return "User already exists"
+    except Exception as e: 
+        print(e)
+    
+    hash_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    del data['password']
+    data['hash_password'] = str(hash_password)
+    if (exists):
+        user.update(**data)
+        return "Updated"
+    else:
+        new_user = User(**data)
+        new_user.save()
+        return "Created"
+
+    return "Unhandled operation"

@@ -1,4 +1,7 @@
-from mongoengine import Document, StringField, connect, GeoPointField,DateTimeField
+from mongoengine import Document, StringField,\
+                        connect, GeoPointField,\
+                        DateTimeField, DecimalField,\
+                        ObjectIdField, BooleanField
 import datetime
 #Uses dotenv to load user variables
 import settings
@@ -13,7 +16,8 @@ class User(Document):
     name = StringField(required=True)
     mail = StringField(required=True)
     hash_password = StringField(required=True)
-    location = GeoPointField(required=False)
+    credit = DecimalField(default=0.0)
+    complete = BooleanField(default=True)
 
 class Restaurant(Document):
     name     = StringField(required=True)
@@ -21,7 +25,9 @@ class Restaurant(Document):
     city     = StringField(required=True)
 
 class Order(Document):
-    pass
+    userID       = ObjectIdField(required=True)
+    restaurantID = ObjectIdField(required=True)
+    userLocation = ObjectIdField(required=True)
 
 class Session(Document):
     userID     = StringField(required=True)
