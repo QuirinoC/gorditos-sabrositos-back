@@ -16,8 +16,9 @@ class User(Document):
     name = StringField(required=True)
     mail = StringField(required=True)
     hash_password = StringField(required=True)
+    #password = StringField(require=False)
     credit = DecimalField(default=0.0)
-    complete = BooleanField(default=True)
+    complete = BooleanField(default=False)
 
 class Restaurant(Document):
     name     = StringField(required=True)

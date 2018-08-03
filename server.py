@@ -47,7 +47,6 @@ def login():
         res_string =  "User not found"
         return make_response(res_string)
     
-    print()
 
     #Check if password matches hashed password
     if bcrypt.checkpw(password, user.hash_password.encode('utf-8')):
@@ -58,7 +57,7 @@ def login():
         res.set_cookie('session', str(session["id"]))
         return res
     else:
-        return make_response('Invalid session')
+        return make_response('Invalid mail/password pair')
     return make_response("UNKNOWN ERROR")
 
 @app.route('/register', methods=['POST'])
@@ -74,10 +73,11 @@ def register():
             return "User already exists"
     except Exception as e: 
         print(e)
-    
-    hash_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hash_password = bcrypt.hashpw(data['password'].encode(), bcrypt.gensalt())
+
     del data['password']
-    data['hash_password'] = str(hash_password)
+    data['hash_password'] = hash_password.decode()
+
     if (exists):
         user.update(**data)
         return "Updated"
@@ -85,5 +85,5 @@ def register():
         new_user = User(**data)
         new_user.save()
         return "Created"
-
+    
     return "Unhandled operation"
