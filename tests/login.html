@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
 </head>
+
 <body>
     <center>
         <form action="http://127.0.0.1:5000/login" method="post">
-            Email<input type="text" name="email"><br>
-            Password<input type="text" name="password"><br>
+            Email: <input type="text" name="mail">
+            <br> 
+            Password: <input type="text" name="password">
+            <br>
             <input type="submit" value="Submit">
-          </form>
+        </form>
+        </br>
+        <form action="http://127.0.0.1:5000/register" method="post">
+            Email: <input type="text" name="mail">
+            <br> 
+            name: <input type="text" name="name">
+            <br>
+            Password: <input type="text" name="password">
+            <br>
+            <input type="submit" value="Submit">
+        </form>
     </center>
 </body>
+
 </html>

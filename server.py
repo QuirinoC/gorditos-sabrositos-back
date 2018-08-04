@@ -38,31 +38,36 @@ def users():
 @app.route('/login', methods=['POST'])
 def login():
     req       = request.json
+    if (req == None): req = request.form
     mail      = req['mail']
     password  = req['password'].encode('utf-8')
-    
     try:
         user = User.objects.get(mail=mail)
-    except Exception as e:
+    except Exception:
         res_string =  "User not found"
+        print("Invalid user")
         return make_response(res_string)
-    
 
+    
     #Check if password matches hashed password
     if bcrypt.checkpw(password, user.hash_password.encode('utf-8')):
         res = make_response('OK')
         #Create a new session for the user
         session = Session(userID=str(user["id"]))
         session.save()
-        res.set_cookie('session', str(session["id"]))
+        res.set_cookie('session', str(session["id"]),expires=session.expires_at)
+        print("Logged in")
         return res
     else:
+        print("Invalid pass")
         return make_response('Invalid mail/password pair')
+    print("ERROR")
     return make_response("UNKNOWN ERROR")
 
 @app.route('/register', methods=['POST'])
 def register():
     data     = request.json
+    if (data == None): data = request.form.to_dict()
     exists   = False
     #Forgive me god for this piece of code
     #Check if the user is already registered
