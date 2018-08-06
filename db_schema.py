@@ -37,6 +37,6 @@ class Session(Document):
     session_hash= StringField(required=True)
 
 class Location(Document):
-    UserID = GeoPointField(required=True)
-    Name   = StringField(required=False, default='current')
-    
+    UserID      = GeoPointField(required=True)
+    Name        = StringField(required=False, default='current')
+    Description = StringField(required=False)
