@@ -31,7 +31,8 @@ class Order(Document):
     userLocation = ObjectIdField(required=True)
 
 class Session(Document):
-    userID     = StringField(required=True)
-    created_at = DateTimeField(default=datetime.utcnow)
-    expires_at = DateTimeField(default=create_expire)
+    userID      = StringField(required=True)
+    created_at  = DateTimeField(default=datetime.utcnow)
+    expires_at  = DateTimeField(default=create_expire)
+    session_hash= StringField(required=True)
 
