@@ -4,9 +4,10 @@ import os
 from flask import Flask, jsonify, make_response, request
 
 
-
 #SECURITY STUFF
 import bcrypt
+from hashlib import md5
+from random import randint
 
 import settings
 #Import predifined schema
@@ -30,10 +31,19 @@ def valid_session(cookies={}):
     if cookies == {} or 'session' not in cookies:
         return False
     try:
-        session = Session.objects.get(id=cookies['session'])
+        session = Session.objects.get(session_hash=cookies['session'])
     except Exception as e:
         return False
     return True
+
+#Hash for cookie
+#Note: Sending the ObjectID as a cookie is not safe at all
+def random_md5():
+    randomString = "".join([
+        chr(randint(65,90)) for _ in range(64)
+    ])
+    md5_hash = md5(randomString.encode()).hexdigest()
+    return md5_hash
     
 
 @app.route('/users', methods=['GET','POST'])
@@ -64,10 +74,9 @@ def login():
     if bcrypt.checkpw(password, user.hash_password.encode('utf-8')):
         res = make_response('OK')
         #Create a new session for the user
-        session = Session(userID=str(user["id"]))
+        session = Session(userID=str(user["id"]), session_hash=random_md5())
         session.save()
-        res.set_cookie('session', str(session["id"]),expires=session.expires_at)
-        print("Logged in")
+        res.set_cookie('session', str(session["session_hash"]),expires=session.expires_at)
         return res
     else:
         print("Invalid pass")
