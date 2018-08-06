@@ -1,7 +1,8 @@
 from mongoengine import Document, StringField,\
                         connect, GeoPointField,\
                         DateTimeField, DecimalField,\
-                        ObjectIdField, BooleanField
+                        ObjectIdField, BooleanField, EmbeddedDocumentListField,
+                        EmbeddedDocument
 import datetime
 #Uses dotenv to load user variables
 import settings
@@ -37,6 +38,14 @@ class Session(Document):
     session_hash= StringField(required=True)
 
 class Location(Document):
-    UserID      = GeoPointField(required=True)
-    Name        = StringField(required=False, default='current')
-    Description = StringField(required=False)
+    userID      = GeoPointField(required=True)
+    uame        = StringField(required=False, default='current')
+    description = StringField(required=False)
+
+class Product(EmbeddedDocument):
+    name = StringField(required=True)
+    price= DecimalField(required=True)
+
+class Cart(Document):
+    userID = ObjectIdField(required=True)
+    products = EmbeddedDocumentListField(EmbeddedDocument(Product))
