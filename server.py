@@ -10,7 +10,7 @@ import bcrypt
 
 import settings
 #Import predifined schema
-from db_schema import Order, Restaurant, User, Session, connect
+from db_schema import Order, Restaurant, User, Session, connect, ObjectIdField
 
 user       = os.environ['DB_USER']
 password   = os.environ['DB_PASS']
@@ -24,6 +24,17 @@ connect(db='gorditos',
 
 #Flask stuff
 app = Flask(__name__)
+
+#Cookie validation
+def valid_session(cookies={}):
+    if cookies == {} or 'session' not in cookies:
+        return False
+    try:
+        session = Session.objects.get(id=cookies['session'])
+    except Exception as e:
+        return False
+    return True
+    
 
 @app.route('/users', methods=['GET','POST'])
 def users():
@@ -92,3 +103,9 @@ def register():
         return "Created"
     
     return "Unhandled operation"
+
+@app.route('/', methods=['GET'])
+def root():
+    if not valid_session(request.cookies):
+        return "INVALID TOKEN"
+    return "OK"
