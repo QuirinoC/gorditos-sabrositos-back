@@ -36,3 +36,7 @@ class Session(Document):
     expires_at  = DateTimeField(default=create_expire)
     session_hash= StringField(required=True)
 
+class Location(Document):
+    UserID = GeoPointField(required=True)
+    Name   = StringField(required=False, default='current')
+    
