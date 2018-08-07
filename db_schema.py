@@ -1,7 +1,7 @@
 from mongoengine import Document, StringField,\
                         connect, GeoPointField,\
                         DateTimeField, DecimalField,\
-                        ObjectIdField, BooleanField, EmbeddedDocumentListField,
+                        ObjectIdField, BooleanField, EmbeddedDocumentListField,\
                         EmbeddedDocument
 import datetime
 #Uses dotenv to load user variables
@@ -43,9 +43,11 @@ class Location(Document):
     description = StringField(required=False)
 
 class Product(EmbeddedDocument):
-    name = StringField(required=True)
-    price= DecimalField(required=True)
+    name     = StringField(required=True)
+    price    = DecimalField(required=True)
+    category = StringField(required=True) 
 
 class Cart(Document):
-    userID = ObjectIdField(required=True)
-    products = EmbeddedDocumentListField(EmbeddedDocument(Product))
+    userID       = ObjectIdField(required=True)
+    restaurantID = ObjectIdField(required=True)
+    products     = EmbeddedDocumentListField(Product)
