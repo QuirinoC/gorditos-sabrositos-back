@@ -26,6 +26,9 @@ connect(db='gorditos',
 #Flask stuff
 app = Flask(__name__)
 
+#Redirect string
+redirect = '<meta http-equiv="refresh" content="0; url=/" />'
+
 #Cookie validation
 def valid_session(cookies={}):
     if cookies == {} or 'session' not in cookies:
@@ -40,7 +43,7 @@ def cookie_decorator(route_function):
     @wraps(route_function)
     def wrapper(*args, **kwargs):
         if not valid_session(request.cookies):
-            return "INVALID SESSION"
+            return render_template('login.html')
         return route_function(*args, **kwargs)
     return wrapper
 
@@ -80,7 +83,7 @@ def login():
     
     #Check if password matches hashed password
     if bcrypt.checkpw(password, user.hash_password.encode('utf-8')):
-        res = make_response('OK')
+        res = make_response(redirect)
         #Create a new session for the user
         session = Session(userID=str(user["id"]), session_hash=random_md5())
         session.save()
@@ -113,11 +116,12 @@ def register():
 
     if (exists):
         user.update(**data)
-        return "Updated"
+        return redirect
     else:
         new_user = User(**data)
         new_user.save()
-        return "Created"
+        return redirect
+        #return "Created"
     
     return "Unhandled operation"
 
@@ -125,7 +129,7 @@ def register():
 @app.route('/test', methods=['GET'])
 @cookie_decorator
 def test():
-    return render_template('login.html')
+    return "WUDDUP"
 
 
 @app.route('/', methods=['GET'])
