@@ -1,7 +1,8 @@
 import os
 
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request, render_template
 
+from functools import wraps
 
 #SECURITY STUFF
 import bcrypt
@@ -34,6 +35,14 @@ def valid_session(cookies={}):
     except Exception as e:
         return False
     return True
+
+def cookie_decorator(route_function):
+    @wraps(route_function)
+    def wrapper(*args, **kwargs):
+        if not valid_session(request.cookies):
+            return "INVALID SESSION"
+        return route_function(*args, **kwargs)
+    return wrapper
 
 #Hash for cookie
 #Note: Sending the ObjectID as a cookie is not safe at all
@@ -112,8 +121,14 @@ def register():
     
     return "Unhandled operation"
 
+
+@app.route('/test', methods=['GET'])
+@cookie_decorator
+def test():
+    return render_template('login.html')
+
+
 @app.route('/', methods=['GET'])
+@cookie_decorator
 def root():
-    if not valid_session(request.cookies):
-        return "INVALID TOKEN"
     return "OK"
