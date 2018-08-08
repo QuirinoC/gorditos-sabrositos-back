@@ -1,7 +1,9 @@
 from mongoengine import connect
 import os
 
-uri = f'mongodb://{user}:{password}@ds153851.mlab.com:53851/gorditos'
+user       = os.environ['DB_USER']
+password   = os.environ['DB_PASS']
+uri        = f'mongodb://{user}:{password}@ds153851.mlab.com:53851/gorditos'
         
 
 #Database connection
