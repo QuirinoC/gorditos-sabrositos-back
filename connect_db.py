@@ -5,7 +5,10 @@ password   = os.environ['DB_PASS']
 uri = f'mongodb://{user}:{password}@ds153851.mlab.com:53851/gorditos'
 
 #Database connection
-connect(db='gorditos',
-        username=user,
-        password=password,
-        host=uri)
+try:
+        connect(db='gorditos',
+                username=user,
+                password=password,
+                host=uri)
+except:
+        pass
