@@ -1,8 +1,14 @@
 from mongoengine import connect
 import os
-user       = os.environ['DB_USER']
-password   = os.environ['DB_PASS']
-uri = f'mongodb://{user}:{password}@ds153851.mlab.com:53851/gorditos'
+
+is_prod = os.environ.get('IS_HEROKU', None)
+
+if is_prod:
+        uri = f'mongodb://{user}:{password}@ds153851.mlab.com:53851/gorditos'
+else:
+        user       = os.environ['DB_USER']
+        password   = os.environ['DB_PASS']
+        uri = f'mongodb://admin:dO5p3rr1@ds153851.mlab.com:53851/gorditos'
 
 #Database connection
 try:
