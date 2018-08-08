@@ -18,5 +18,7 @@ try:
                 username=user,
                 password=password,
                 host=uri)
-except:
-        pass
+except Exception as e:
+        print(e)
+
+#Crash if not connected
