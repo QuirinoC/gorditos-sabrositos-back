@@ -71,8 +71,9 @@ def login():
     password  = req['password'].encode('utf-8')
     try:
         user = User.objects.get(mail=mail)
-    except Exception:
+    except Exception as e:
         res_string =  "User not found"
+        print(e)
         print("Invalid user")
         return make_response(res_string)
 
