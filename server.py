@@ -1,8 +1,12 @@
-
 import os
 
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request, render_template, Response
 
+from functools import wraps
+
+from database_functions import *
+
+import json
 
 #SECURITY STUFF
 import bcrypt
@@ -13,18 +17,13 @@ import settings
 #Import predifined schema
 from db_schema import Order, Restaurant, User, Session, connect, ObjectIdField
 
-user       = os.environ['DB_USER']
-password   = os.environ['DB_PASS']
-uri = f'mongodb://{user}:{password}@ds153851.mlab.com:53851/gorditos'
-
-#Database connection
-connect(db='gorditos',
-        username=user,
-        password=password,
-        host=uri)
+from connect_db import * 
 
 #Flask stuff
 app = Flask(__name__)
+
+#Redirect string
+redirect = '<meta http-equiv="refresh" content="0; url=/" />'
 
 #Cookie validation
 def valid_session(cookies={}):
@@ -35,6 +34,14 @@ def valid_session(cookies={}):
     except Exception as e:
         return False
     return True
+
+def cookie_decorator(route_function):
+    @wraps(route_function)
+    def wrapper(*args, **kwargs):
+        if not valid_session(request.cookies):
+            return render_template('login.html')
+        return route_function(*args, **kwargs)
+    return wrapper
 
 #Hash for cookie
 #Note: Sending the ObjectID as a cookie is not safe at all
@@ -72,7 +79,7 @@ def login():
     
     #Check if password matches hashed password
     if bcrypt.checkpw(password, user.hash_password.encode('utf-8')):
-        res = make_response('OK')
+        res = make_response(redirect)
         #Create a new session for the user
         session = Session(userID=str(user["id"]), session_hash=random_md5())
         session.save()
@@ -105,16 +112,37 @@ def register():
 
     if (exists):
         user.update(**data)
-        return "Updated"
+        res = make_response(redirect)
+        #Create a new session for the user
+        session = Session(userID=str(user["id"]), session_hash=random_md5())
+        session.save()
+        res.set_cookie('session', str(session["session_hash"]),expires=session.expires_at)
+        return res
     else:
         new_user = User(**data)
         new_user.save()
-        return "Created"
+        return redirect
+        #return "Created"
     
     return "Unhandled operation"
 
+
+@app.route('/test', methods=['GET'])
+@cookie_decorator
+def test():
+    return "WUDDUP"
+
+
 @app.route('/', methods=['GET'])
+@cookie_decorator
 def root():
-    if not valid_session(request.cookies):
-        return "INVALID TOKEN"
-    return "OK"
+    session = request.cookies['session']
+
+    results = get_restaurants(session, 3)
+
+    res = Response(
+        results.to_json(),
+        mimetype='application/json'
+        )
+    
+    return res
