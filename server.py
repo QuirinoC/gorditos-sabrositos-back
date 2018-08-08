@@ -21,6 +21,8 @@ from connect_db import *
 
 #Flask stuff
 app = Flask(__name__)
+app.config['MONGODB_SETTINGS'] = {'db':'gorditos', 'alias':'default'}
+
 
 #Redirect string
 redirect = '<meta http-equiv="refresh" content="0; url=/" />'
