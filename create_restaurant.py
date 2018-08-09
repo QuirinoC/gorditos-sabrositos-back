@@ -16,17 +16,37 @@ urls = [
     "https://images.pexels.com/photos/5317/food-salad-restaurant-person.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"    
 
 ]
+
+categories = ['Promociones',
+              'Envio Gratis',
+              'Mexicana',
+              'Hamburguesas',
+              'Hot Dogs',
+              'Pizza',
+              'Comida China',
+              'Japonesa y Sushi',
+              'Café',
+              'Postres',
+              'Mariscos']
+
+delivery_costs = ['0','25','30','40']
+
 random_el = lambda l: l[randint(0,len(l)-1)]
+
+
+
 
 #Change schema for location to GeoPointField
 for i in range(0,100):
     lat = round(uniform(20.551303,20.742335),6)
     lon = round(uniform(-103.461074,-103.221499),6)
     restaurant = Restaurant(
-        name=str(hash(chr(i))),
-        location=[lon,lat],
-        city='GDL',
-        img_url=random_el(urls)
+        name         =str(hash(chr(i))),
+        location     =[lon,lat],
+        city         ='GDL',
+        img_url      =random_el(urls),
+        category     =random_el(categories),
+        delivery_cost=random_el(delivery_costs)
     ).save()
 #restaurant.save()
 result = Restaurant.objects(location__geo_within_sphere=[[-103.391922, 20.673566], 3/6371.0])

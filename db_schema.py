@@ -38,6 +38,8 @@ class Restaurant(Document):
     location        = PointField(required=True)
     city            = StringField(required=True)
     img_url         = StringField(required=False, default=random_img(urls))
+    category        = StringField(required=True, default='Restaurante')
+    delivery_cost   = StringField(required=True, default='0')
 
 class Order(Document):
     userID          = ObjectIdField(required=True)
