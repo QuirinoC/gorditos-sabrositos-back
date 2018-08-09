@@ -13,6 +13,17 @@ from datetime import datetime, timedelta
 def create_expire(days=30):
     return datetime.utcnow() + timedelta(days=days)
 
+from random import randint
+urls = [
+    "https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg?cs=srgb&dl=food-dinner-lunch-70497.jpg&fm=jpg",
+    "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "https://images.pexels.com/photos/5938/food-salad-healthy-lunch.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "https://images.pexels.com/photos/5317/food-salad-restaurant-person.jpg?cs=srgb&dl=beverages-brunch-cocktail-5317.jpg&fm=jpg",
+    "https://images.pexels.com/photos/5317/food-salad-restaurant-person.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"    
+
+]
+random_img = lambda l: l[randint(0,len(l)-1)]
+
 class User(Document):
     name            = StringField(required=True)
     mail            = StringField(required=True)
@@ -26,6 +37,7 @@ class Restaurant(Document):
     name            = StringField(required=True)
     location        = PointField(required=True)
     city            = StringField(required=True)
+    img_url         = StringField(required=False, default=random_img(urls))
 
 class Order(Document):
     userID          = ObjectIdField(required=True)

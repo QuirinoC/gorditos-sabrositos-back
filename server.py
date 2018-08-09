@@ -45,6 +45,7 @@ def cookie_decorator(route_function):
         return route_function(*args, **kwargs)
     return wrapper
 
+
 #Hash for cookie
 #Note: Sending the ObjectID as a cookie is not safe at all
 def random_md5():
@@ -68,31 +69,41 @@ def users():
 @app.route('/login', methods=['POST'])
 def login():
     req       = request.json
+    res       = {}
     if (req == None): req = request.form
-    mail      = req['mail']
-    password  = req['password'].encode('utf-8')
+    mail      = req.get('mail')
+    password  = req.get('password',"").encode('utf-8')
     try:
         user = User.objects.get(mail=mail)
     except Exception as e:
-        res_string =  "User not found"
         print(e)
-        print("Invalid user")
-        return make_response(res_string)
+        res['status'] = 'ERROR'
+        res['message']= 'USER NOT FOUND'
+        res = jsonify(res)
+        return make_response(res)
 
     
     #Check if password matches hashed password
     if bcrypt.checkpw(password, user.hash_password.encode('utf-8')):
-        res = make_response(redirect)
         #Create a new session for the user
         session = Session(userID=str(user["id"]), session_hash=random_md5())
         session.save()
-        res.set_cookie('session', str(session["session_hash"]),expires=session.expires_at)
-        return res
+        #res.set_cookie('session', str(session["session_hash"]),expires=session.expires_at)
+        res["token"] = str(session["session_hash"])
+        res["status"]= "OK"
+        res = jsonify(res)
+        return make_response(res)
     else:
         print("Invalid pass")
-        return make_response('Invalid mail/password pair')
-    print("ERROR")
-    return make_response("UNKNOWN ERROR")
+        res['status'] = 'ERROR'
+        res['message']= 'INVALID PASSWORD'
+        res = jsonify(res)
+        return make_response(res)
+
+    res['status'] = 'ERROR'
+    res['message']= 'UNKNOWN ERROR'
+    res = jsonify(res)
+    return make_response(res)
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -137,7 +148,7 @@ def test():
 
 
 @app.route('/near_restaurants', methods=['GET'])
-@cookie_decorator
+#@cookie_decorator
 def home():
     session = request.cookies['session']
 

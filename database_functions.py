@@ -32,4 +32,6 @@ def get_user_location(user):
 
 if __name__=='__main__':
     from connect_db import * 
-    print(get_user_by_session("20b7d99251fe04dd2ef62728a876da0f"))
+    #print(get_user_by_session("20b7d99251fe04dd2ef62728a876da0f"))
+    r = Restaurant.objects.get(pk="5b690b4373c32e764246268c")
+    print(r['img_url'])
