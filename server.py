@@ -136,9 +136,9 @@ def test():
     return "WUDDUP"
 
 
-@app.route('/', methods=['GET'])
+@app.route('/home', methods=['GET'])
 @cookie_decorator
-def root():
+def home():
     session = request.cookies['session']
 
     results = get_restaurants(session, 3)
@@ -149,3 +149,7 @@ def root():
         )
     
     return res
+
+@app.route('/', methods=['GET'])
+def root():
+    return "GORDITOS-SABROSITOS-API"
