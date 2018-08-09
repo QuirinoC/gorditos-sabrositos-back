@@ -107,6 +107,7 @@ def login():
 
 @app.route('/register', methods=['POST'])
 def register():
+    res = {}
     data     = request.json
     if (data == None): data = request.form.to_dict()
     exists   = False
@@ -150,7 +151,12 @@ def test():
 @app.route('/near_restaurants', methods=['GET'])
 #@cookie_decorator
 def home():
-    session = request.cookies['session']
+    data     = request.json
+    if (data == None): data = request.form.to_dict()
+    print(data)
+
+    session = request.args.get('session','2a59a996d38d87afc936ad5742e50af7')
+
 
     results = get_restaurants(session, 3)
 
