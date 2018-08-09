@@ -13,9 +13,10 @@ def get_restaurants(session, distance=3):
         Returns the closest restaurants to the user 
     '''
     user = get_user_by_session(session)
-    location = get_locations_by_user(user['id'])
-    print(location)
-    results = Restaurant.objects(location__geo_within_sphere=[[-103.391922, 20.673566], 3/6371.0])
+    location = get_user_location(user)
+    lon, lat = location
+    print(lon,lat)
+    results = Restaurant.objects(location__geo_within_sphere=[[lon, lat], 3/6371.0])
     return results
 
 def get_locations_by_user(userID):
@@ -25,6 +26,9 @@ def get_locations_by_user(userID):
         results = []
     return results
 
+def get_user_location(user):
+    location = user['current_location']['coordinates']
+    return location
 
 if __name__=='__main__':
     from connect_db import * 

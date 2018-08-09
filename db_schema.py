@@ -19,7 +19,7 @@ class User(Document):
     hash_password   = StringField(required=True)
     credit          = DecimalField(default=0.0)
     complete        = BooleanField(default=False)
-    currentLocation = PointField(required=False)
+    current_location= PointField(required=False, default=[-103.392800,20.675045])
     #password = StringField(require=False)
 
 class Restaurant(Document):

@@ -136,7 +136,7 @@ def test():
     return "WUDDUP"
 
 
-@app.route('/home', methods=['GET'])
+@app.route('/near_restaurants', methods=['GET'])
 @cookie_decorator
 def home():
     session = request.cookies['session']
@@ -154,3 +154,23 @@ def home():
 def root():
     return "GORDITOS-SABROSITOS-API"
 
+@app.route('/set_location', methods=['POST'])
+@cookie_decorator
+def set_location():
+    data     = request.json
+    if (data == None): data = request.form.to_dict()
+    user = get_user_by_session(request.cookies['session'])
+    new_location = [float(data['long']), float(data['lat'])]
+    user['current_location'] = new_location
+    try:
+        user.save()
+        return "OK"
+    except:
+        return "ERROR"
+
+@app.route('/get_location', methods=['GET'])
+@cookie_decorator
+def get_location():
+    user = get_user_by_session(request.cookies['session'])
+    location = user['current_location']['coordinates']
+    return str(location)
