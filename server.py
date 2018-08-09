@@ -59,6 +59,13 @@ def random_md5():
     return md5_hash
     
 
+def make_error(message):
+    "This method returns a response with error"
+    res = {}
+    res['status'] = "ERROR"
+    res['message'] = message
+    return make_response(jsonify(res))
+
 @app.route('/users', methods=['GET','POST'])
 def users():
     user = User(**request.json)
@@ -80,10 +87,7 @@ def login():
         user = User.objects.get(mail=mail)
     except Exception as e:
         print(e)
-        res['status'] = 'ERROR'
-        res['message']= 'USER NOT FOUND'
-        res = jsonify(res)
-        return make_response(res)
+        return make_error('USER NOT FOUND')
 
     
     #Check if password matches hashed password
@@ -98,15 +102,9 @@ def login():
         return make_response(res)
     else:
         print("Invalid pass")
-        res['status'] = 'ERROR'
-        res['message']= 'INVALID PASSWORD'
-        res = jsonify(res)
-        return make_response(res)
+        return make_error("WRONG PASSWORD")
 
-    res['status'] = 'ERROR'
-    res['message']= 'UNKNOWN ERROR'
-    res = jsonify(res)
-    return make_response(res)
+    return make_error("UNKNOWN")
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -114,35 +112,54 @@ def register():
     data     = request.json
     if (data == None): data = request.form.to_dict()
     exists   = False
-    #Forgive me god for this piece of code
+
     #Check if the user is already registered
     try:
         user   = User.objects.get(mail=data['mail'])
         exists = True
-        if (user.complete):
-            return "User already exists"
+        print(user['complete'])
+        if (user['complete']):
+            return make_error("USER ALREADY EXISTS")
     except Exception as e: 
+        '''
+            User was not found but its okay since this is registration
+        '''
         print(e)
+
+    #Create password hash
     hash_password = bcrypt.hashpw(data['password'].encode(), bcrypt.gensalt())
 
     del data['password']
     data['hash_password'] = hash_password.decode()
 
     if (exists):
+        '''
+            If the user already exists in database but the registration is not complete
+        '''
         user.update(**data)
-        res = make_response(redirect)
         #Create a new session for the user
         session = Session(userID=str(user["id"]), session_hash=random_md5())
         session.save()
-        res.set_cookie('session', str(session["session_hash"]),expires=session.expires_at)
-        return res
+        #res.set_cookie('session', str(session["session_hash"]),expires=session.expires_at)
+        res["token"]  = str(session["session_hash"])
+        res["status"] = "OK"
+        res["message"]= "USER UPDATED"
+        res = jsonify(res)
+        return make_response(res)
     else:
-        new_user = User(**data)
-        new_user.save()
-        return redirect
-        #return "Created"
-    
-    return "Unhandled operation"
+        print("HERE")
+        user = User(**data)
+        user.save()
+        #Create a new session for the user
+        session = Session(userID=str(user["id"]), session_hash=random_md5())
+        session.save()
+        #res.set_cookie('session', str(session["session_hash"]),expires=session.expires_at)
+        res["token"]  = str(session["session_hash"])
+        res["status"] = "OK"
+        res["message"]= "USER CREATED"
+        res = jsonify(res)
+        return make_response(res)
+    return make_error('UNKNOWN ERROR')
 
 
 @app.route('/test', methods=['GET'])
