@@ -64,7 +64,7 @@ def make_error(message):
     res = {}
     res['status'] = "ERROR"
     res['message'] = message
-    return make_response(jsonify(res))
+    return make_response(jsonify(res),401)
 
 @app.route('/users', methods=['GET','POST'])
 def users():
@@ -161,6 +161,21 @@ def register():
         return make_response(res)
     return make_error('UNKNOWN ERROR')
 
+@app.route('/logout',methods=['DELETE'])
+def logout():
+    data     = request.json
+    res = {}
+    if (data == None): data = request.form.to_dict()
+    if data == {}:
+        data['session'] = request.args.get('session')
+    try:
+        Session.objects.get(session_hash=data['session']).delete()
+        res['status'] = "OK"
+        res['message']= "LOGGED OUT"
+        res = jsonify(res)
+        return make_response(res)
+    except:
+        return make_error('INVALID SESSION')
 
 @app.route('/test', methods=['GET'])
 @cookie_decorator
@@ -175,10 +190,13 @@ def home():
     if (data == None): data = request.form.to_dict()
     print(data)
 
+
     session = request.args.get('session','neutral')
-
-
-    results = get_restaurants(session, 3)
+    
+    try:
+        results = get_restaurants(session, 3)
+    except:
+        return make_error("INVALID USER SESSION")
 
     res = Response(
         results.to_json(),
