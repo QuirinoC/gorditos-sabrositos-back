@@ -8,6 +8,8 @@ from database_functions import *
 
 import json
 
+from flask_cors import CORS
+
 #SECURITY STUFF
 import bcrypt
 from hashlib import md5
@@ -21,6 +23,7 @@ from connect_db import *
 
 #Flask stuff
 app = Flask(__name__)
+CORS(app)
 app.config['MONGODB_SETTINGS'] = {'db':'gorditos', 'alias':'default'}
 
 
@@ -155,7 +158,7 @@ def home():
     if (data == None): data = request.form.to_dict()
     print(data)
 
-    session = request.args.get('session','2a59a996d38d87afc936ad5742e50af7')
+    session = request.args.get('session','neutral')
 
 
     results = get_restaurants(session, 3)

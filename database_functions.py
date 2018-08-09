@@ -12,9 +12,14 @@ def get_restaurants(session, distance=3):
     '''
         Returns the closest restaurants to the user 
     '''
-    user = get_user_by_session(session)
-    location = get_user_location(user)
-    lon, lat = location
+    if session == "neutral":
+        lon = -103.388470
+        lat = 20.674851
+    else:
+        user = get_user_by_session(session)
+        location = get_user_location(user)
+        lon, lat = location
+        
     print(lon,lat)
     results = Restaurant.objects(location__geo_within_sphere=[[lon, lat], 3/6371.0])
     return results
