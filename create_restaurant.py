@@ -17,17 +17,18 @@ urls = [
 
 ]
 
-categories = ['Promociones',
-              'Envio Gratis',
-              'Mexicana',
-              'Hamburguesas',
-              'Hot Dogs',
-              'Pizza',
-              'Comida China',
-              'Japonesa y Sushi',
-              'Café',
-              'Postres',
-              'Mariscos']
+categories = \
+[('Promociones', 'promo_url'),
+ ('Envio Gratis', 'free_url'),
+ ('Mexicana', 'mexican_url'),
+ ('Hamburguesas', 'hambagu_url'),
+ ('Hot Dogs', 'hotdogs_url'),
+ ('Pizza', 'pizza_url'),
+ ('Comida China', 'chinese_url'),
+ ('Japonesa y Sushi', 'nihon_url'),
+ ('Café', 'coffe_url'),
+ ('Postres', 'pastries_url'),
+ ('Mariscos', 'seafood_url')]
 
 delivery_costs = ['0','25','30','40']
 
@@ -40,16 +41,17 @@ random_el = lambda l: l[randint(0,len(l)-1)]
 for i in range(0,100):
     lat = round(uniform(20.551303,20.742335),6)
     lon = round(uniform(-103.461074,-103.221499),6)
+    index = randint(0, len(categories)-1)
     restaurant = Restaurant(
         name         =str(hash(chr(i))),
         location     =[lon,lat],
         city         ='GDL',
-        img_url      =random_el(urls),
-        category     =random_el(categories),
+        img_url      =categories[index][1],
+        category     =categories[index][0],
         delivery_cost=random_el(delivery_costs)
     ).save()
 #restaurant.save()
-result = Restaurant.objects(location__geo_within_sphere=[[-103.391922, 20.673566], 3/6371.0])
+#result = Restaurant.objects(location__geo_within_sphere=[[-103.391922, 20.673566], 3/6371.0])
 
-for r in result:
-    print(r['location'])
+#for r in result:
+#    print(r['location'])
