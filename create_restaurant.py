@@ -70,22 +70,23 @@ delivery_costs = ['0','25','30','40']
 
 random_el = lambda l: l[randint(0,len(l)-1)]
 
-
-
-
-#Change schema for location to GeoPointField
-for i in range(0,200):
+open_hours    = ['8:00', '8:30', '9:00', '9:30', '10:00', '11:00', '12:00', '1:00']
+service_hours = ['16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30', '23:59']
+#Change schema for location to GeoPointField quirino es puto
+for i in range(0,1000):
     lat = round(uniform(20.551303,20.742335),6)
     lon = round(uniform(-103.461074,-103.221499),6)
     index = randint(0, len(categories)-1)
     restaurant = Restaurant(
-        name         =str(hash(chr(i))),
+        name         ="Restaurant: " + categories[index][0],
         location     =[lon,lat],
         city         ='GDL',
         img_url      =random_el(categories[index][1]),
         category     =categories[index][0],
         delivery_cost=random_el(delivery_costs),
-        category_code=categories[index][2]
+        category_code=categories[index][2],
+        service_hours=f"{random_el(open_hours)} - {random_el(service_hours)}"
+
     ).save()
 #restaurant.save()
 #result = Restaurant.objects(location__geo_within_sphere=[[-103.391922, 20.673566], 3/6371.0])

@@ -41,6 +41,7 @@ class Restaurant(Document):
     category        = StringField(required=True, default='Restaurante')
     delivery_cost   = StringField(required=True, default='0')
     category_code   = StringField(required=True)
+    service_hours   = StringField(required=True)
 
 class Order(Document):
     userID          = ObjectIdField(required=True)
