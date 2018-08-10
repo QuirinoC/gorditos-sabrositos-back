@@ -192,9 +192,9 @@ def home():
 
 
     session = request.args.get('session','neutral')
-    
+    category= request.args.get('category','all')
     try:
-        results = get_restaurants(session, 3)
+        results = get_restaurants(session,category, 3)
     except:
         return make_error("INVALID USER SESSION")
 

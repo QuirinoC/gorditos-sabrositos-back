@@ -40,6 +40,7 @@ class Restaurant(Document):
     img_url         = StringField(required=False, default=random_img(urls))
     category        = StringField(required=True, default='Restaurante')
     delivery_cost   = StringField(required=True, default='0')
+    category_code   = StringField(required=True)
 
 class Order(Document):
     userID          = ObjectIdField(required=True)

@@ -8,20 +8,27 @@ def get_user_by_session(cookie_session):
     user  = User.objects.get(id=session['userID'])
     return user
 
-def get_restaurants(session, distance=3):
+def get_restaurants(session, category, distance):
     '''
         Returns the closest restaurants to the user 
     '''
+
     if session == "neutral":
+        print('neutral')
         lon = -103.388470
         lat = 20.674851
     else:
         user = get_user_by_session(session)
         location = get_user_location(user)
         lon, lat = location
-        
+
     print(lon,lat)
-    results = Restaurant.objects(location__geo_within_sphere=[[lon, lat], 3/6371.0])
+    if category == 'all':
+        print('all')
+        results = Restaurant.objects(location__geo_within_sphere=[[lon, lat], distance/6371.0])
+    else:
+        results = Restaurant.objects(location__geo_within_sphere=[[lon, lat], distance/6371.0], category_code=category)
+    
     return results
 
 def get_locations_by_user(userID):
