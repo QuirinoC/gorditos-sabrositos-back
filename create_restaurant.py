@@ -53,8 +53,9 @@ seafood  = ["http://imagizer.imageshack.us/a/img924/5560/mr8X1i.jpg",
             "http://imagizer.imageshack.us/a/img922/7802/mPQZnh.jpg"]
 
 categories = \
-[('Promociones', promo,'promo'),
- ('Envio Gratis', free,'free'),
+[
+ #('Promociones', promo,'promo'),
+ #('Envio Gratis', free,'free'),
  ('Mexicana', mexican,'mexican'),
  ('Hamburguesas', hamburger,'hamburger'),
  ('Hot Dogs', hotdog,'hotdog'),
@@ -73,7 +74,7 @@ random_el = lambda l: l[randint(0,len(l)-1)]
 
 
 #Change schema for location to GeoPointField
-for i in range(0,100):
+for i in range(0,200):
     lat = round(uniform(20.551303,20.742335),6)
     lon = round(uniform(-103.461074,-103.221499),6)
     index = randint(0, len(categories)-1)

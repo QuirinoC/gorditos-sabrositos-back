@@ -8,15 +8,15 @@ def get_user_by_session(cookie_session):
     user  = User.objects.get(id=session['userID'])
     return user
 
-def get_restaurants(session, category, distance):
+def get_restaurants(session, category, distance, lat,lon):
     '''
         Returns the closest restaurants to the user 
     '''
 
     if session == "neutral":
         print('neutral')
-        lon = -103.388470
-        lat = 20.674851
+        lon = lon
+        lat = lat
     else:
         user = get_user_by_session(session)
         location = get_user_location(user)
