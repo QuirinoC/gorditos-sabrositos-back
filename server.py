@@ -193,8 +193,10 @@ def home():
 
     session = request.args.get('session','neutral')
     category= request.args.get('category','all')
-    lat     = float(request.args.get('lat',20.674851)  )
-    lon     = float(request.args.get('lon',-103.388470))
+    #CENTRAAL
+    #20.675094, -103.392790
+    lat     = float(request.args.get('lat',20.675094)  )
+    lon     = float(request.args.get('lon',-103.392790))
     try:
         results = get_restaurants(session,category, 3,lat,lon)
     except Exception as e:
