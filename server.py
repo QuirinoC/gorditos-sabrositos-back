@@ -195,7 +195,6 @@ def home():
     category= request.args.get('category','all')
     lat     = float(request.args.get('lat',20.674851)  )
     lon     = float(request.args.get('lon',-103.388470))
-    print(lat,lon)
     try:
         results = get_restaurants(session,category, 3,lat,lon)
     except Exception as e:

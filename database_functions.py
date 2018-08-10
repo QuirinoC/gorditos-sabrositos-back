@@ -14,7 +14,6 @@ def get_restaurants(session, category, distance, lat,lon):
     '''
 
     if session == "neutral":
-        print('neutral')
         lon = lon
         lat = lat
     else:
@@ -24,11 +23,10 @@ def get_restaurants(session, category, distance, lat,lon):
 
     print(lon,lat)
     if category == 'all':
-        print('all')
         results = Restaurant.objects(location__geo_within_sphere=[[lon, lat], distance/6371.0])
     else:
         results = Restaurant.objects(location__geo_within_sphere=[[lon, lat], distance/6371.0], category_code=category)
-    
+
     return results
 
 def get_locations_by_user(userID):
