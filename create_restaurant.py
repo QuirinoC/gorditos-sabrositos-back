@@ -72,7 +72,7 @@ random_el = lambda l: l[randint(0,len(l)-1)]
 
 open_hours    = ['8:00', '8:30', '9:00', '9:30', '10:00', '11:00', '12:00', '1:00']
 service_hours = ['16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30', '23:59']
-#Change schema for location to GeoPointField quirino es puto
+#Change schema for location to GeoPointField
 for i in range(0,1000):
     lat = round(uniform(20.551303,20.742335),6)
     lon = round(uniform(-103.461074,-103.221499),6)
