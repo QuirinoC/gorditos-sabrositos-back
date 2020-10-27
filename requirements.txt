@@ -6,7 +6,7 @@ bcrypt==3.1.4
 black==18.6b4
 cffi==1.11.5
 click==6.7
-cryptography==2.3
+cryptography==3.2
 Flask==1.0.2
 Flask-Cors==3.0.6
 gunicorn==19.9.0
